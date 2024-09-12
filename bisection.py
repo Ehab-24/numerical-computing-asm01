@@ -1,8 +1,8 @@
-from utils import Func, Interval, kMaxNumIterations #type:ignore
-from typing import List, Tuple
+from utils import Func, Interval, kMaxNumIterations
+from typing import List
 
 
-def findRootBisection(f: Func, interval: Interval, roots: List[float] = [], threshold: float = 10e-5, recursionCount: int = 0) -> List[float]:
+def findRootBisection(f: Func, interval: Interval, roots: List[float] = [], threshold: float = 10e-6, recursionCount: int = 0) -> List[float]:
     recursionCount += 1
 
     if recursionCount > kMaxNumIterations:

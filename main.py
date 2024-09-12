@@ -1,15 +1,17 @@
-from utils import Func, GXs, Interval, printSummary, plotFunc, funcString # type:ignore
-from bisection import findRootBisection # type:ignore
-from fixed_point_iteration import findRootFixedPointItertion # type:ignore
-from newton_ralphson import findRootNewtonRalphson # type:ignore
+from utils import Func, GXs, Interval, printSummary, plotFunc
+from bisection import findRootBisection
+from fixed_point_iteration import findRootFixedPointItertion
+from newton_ralphson import findRootNewtonRalphson
+from secant import findRootSecant
 
 from numpy import cos, sin, exp, log, sqrt
 import warnings
 
 
 def main():
+
     ############################################
-    # Part (i) - (a)
+    # Question 1 (a)
     ###########################################
 
     f: Func = lambda x: x**2 - 4*x + log(x)
@@ -19,7 +21,7 @@ def main():
     printSummary("1 (a)", f, interval, roots)
 
     ############################################
-    # Part (i) - (b)
+    # Question 1 (b)
     ###########################################
 
     f: Func = lambda x: x**2 - 4*x + log(x)
@@ -29,7 +31,7 @@ def main():
     printSummary("1 (b)", f, interval, roots)
 
     ############################################
-    # Part (ii)
+    # Question 2
     ###########################################
 
     f: Func = lambda x: cos(exp(x) - 2) - exp(x) + 2
@@ -39,7 +41,7 @@ def main():
     printSummary("2", f, interval, roots)
 
     ############################################
-    # Part (iii)
+    # Question 3 (a)
     ###########################################
 
     f: Func = lambda x: x**4 - 3*(x**2) - 3
@@ -61,19 +63,81 @@ def main():
             lambda x: (2 / sqrt(1 + x**2)) - (sqrt(1 + x**2) / x**2)
         ),
     ]
-    roots = findRootFixedPointItertion(f, 1.0, gxs, (1, 2), threshold=10e-3)
+    roots = findRootFixedPointItertion(1.0, gxs, (1, 2))
     printSummary("3 (a)", f, interval, roots)
 
     ############################################
-    # Part (iii)
+    # Question 3 (b)
+    ###########################################
+
+    f: Func = lambda x: x**3 - x - 1
+    gxs: GXs = [
+        (
+            lambda x: x**3 - 1,
+            lambda x: 3 * x**2
+        ),
+        (
+            lambda x: 1 / (x**2 - 1),
+            lambda x: (-2*x) / (x**2 - 1)**2
+        ),
+        (
+            lambda x: (x + 1) ** (1/3),
+            lambda x: (1/3) / (x + 1)**(2/3)
+        ),
+        (
+            lambda x: (1/x) + (1/x**2),
+            lambda x: (-1/x**2) - (2/x**3)
+        ),
+        (
+            lambda x: sqrt((x + 1) / x),
+            lambda x: -1 / (2 * sqrt(x * (x + 1)))
+        )
+    ]
+    roots = findRootFixedPointItertion(1.0, gxs, (1, 2))
+    printSummary("3 (b)", f, interval, roots)
+
+    ############################################
+    # Question 4 (a)
     ###########################################
 
     f: Func = lambda x: exp(x) + 2**(-x) + 2*cos(x) - 6
     f_: Func = lambda x: exp(x) - 2**(-2*x) - 2*sin(x)
     interval = (1, 2)
 
-    roots = findRootNewtonRalphson(f, f_, interval, threshold=10e-5)
+    roots = findRootNewtonRalphson(f, f_, interval)
     printSummary("4 (a)", f, interval, roots)
+
+    ############################################
+    # Question 4 (b)
+    ###########################################
+    
+    f: Func = lambda x: log(x-1) + cos(x-1)
+    interval = (1.3, 2)
+
+    roots = findRootSecant(f, interval)
+    printSummary("4 (b)", f, interval, roots)
+
+    ############################################
+    # Question 5
+    ###########################################
+    
+    f: Func = lambda x: x**2 - 4*x + 4 - log(x)
+    f_: Func = lambda x: 2*x - 4 - (1/x)
+    interval = (1, 2)
+
+    roots = findRootNewtonRalphson(f, f_, interval)
+    printSummary("5 (a) - Newton-Ralphson", f, interval, roots)
+
+    roots = findRootSecant(f, interval)
+    printSummary("5 (a) - Secant", f, interval, roots)
+
+    interval = (2, 4)
+
+    roots = findRootNewtonRalphson(f, f_, interval)
+    printSummary("5 (b) - Newton-Ralphson", f, interval, roots)
+
+    roots = findRootSecant(f, interval)
+    printSummary("5 (b) - Secant", f, interval, roots)
 
 
 if __name__ == "__main__":

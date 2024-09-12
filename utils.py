@@ -32,11 +32,11 @@ def funcString(f: Func) -> str:
     return ' '.join(inspect.getsource(f).split('=')[1].split(' ')[3:]).strip()
 
 
-def printSummary(question: str, f: Func, interval: Interval, roots: List[Tuple[float, float]]):
+def printSummary(question: str, f: Func, interval: Interval, roots: List[float]):
     numIterations = len(roots)
     numIterations_ = str(numIterations)
     if (numIterations == kMaxNumIterations):
-        numIterations_ = "{} (max)".format(numIterations)
+        numIterations_ = "{}\t(MAX LIMIT)".format(numIterations)
     question = "Question: {}".format(question)
     print("{}\n{}".format(question, '-' * len(question)))
     print("f(x) = {}\nInterval = {}\nNum iterations = {}".format(funcString(f), interval, numIterations_))
@@ -49,3 +49,7 @@ def plotFunc(f: Func):
     plt.show(block=False)
     plt.waitforbuttonpress()
     plt.close()
+
+
+def change(xs: List[float]) -> float:
+    return abs(xs[-1] - xs[-2])

@@ -1,5 +1,5 @@
-from typing import List
-from utils import Func, funcString, Interval, kFloatingJitter, kMaxNumIterations, GXs #type:ignore
+from typing import List, Tuple
+from utils import Func, Interval, kFloatingJitter, GXs, change, kMaxNumIterations
 
 
 def findGx_(x0: float, gxs: GXs) -> Func:
@@ -14,7 +14,13 @@ def findGx_(x0: float, gxs: GXs) -> Func:
     Returns:
     - Func: g(x) that is most suitable for convergence
     """
-    g_s = [(abs(g_(x0)), g) for g, g_ in gxs]
+    g_s: List[Tuple[float, Func]] = []
+    for g, g_ in gxs:
+        try:
+            g_x0 = abs(g_(x0))
+            g_s.append((g_x0, g))
+        except:
+            pass
 
     min_g_ = 2 ** 31 - 1
     min_g = lambda x: x
@@ -27,7 +33,7 @@ def findGx_(x0: float, gxs: GXs) -> Func:
     return min_g
 
 
-def findRootFixedPointItertion(f: Func, x0: float, gxs: GXs, interval: Interval, threshold: float = 10e-2) -> List[float]:
+def findRootFixedPointItertion(x0: float, gxs: GXs, interval: Interval, threshold: float = 10e-3) -> List[float]:
     """
     Applies fixed-point iteration to find the root of the given function `f`.
 
@@ -42,17 +48,16 @@ def findRootFixedPointItertion(f: Func, x0: float, gxs: GXs, interval: Interval,
     - float: The approximated root of the function `f` after applying the fixed-point iteration process.
     """
 
-    def error(xs: List[float]) -> float:
-        return abs(xs[-1] - xs[-2])
-
     if x0 < interval[0]:
         raise ValueError("`x0` must be inside interval\tx0: {}, Interval: {}".format(x0, interval))
     gx = findGx_(x0, gxs)
 
     xs: List[float] = [x0]
-    while xs[-1] < interval[1]:
+    n_iterations = 0
+    while xs[-1] < interval[1] and n_iterations < kMaxNumIterations:
+        n_iterations+=1
         xs.append(gx(xs[-1]))
-        if error(xs) < threshold:
+        if change(xs) < threshold:
             break
 
     return xs
