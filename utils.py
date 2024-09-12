@@ -1,4 +1,4 @@
-from typing import Callable, Tuple, List
+from typing import Callable, Tuple, List, Union
 import inspect
 import numpy as np
 import matplotlib.pyplot as plt
@@ -43,9 +43,22 @@ def printSummary(question: str, f: Func, interval: Interval, roots: List[float])
     print("Root = {}\n\n".format(roots[-1]))
 
 
-def plotFunc(f: Func):
-    x = np.linspace(0.1, 4, 50)
-    plt.plot(x, f(x))   # type:ignore
+def plotFunc(f: Func, root: float, interval: Interval):
+    """
+    Plots the function `f` and optionally displays a specific point on the graph.
+
+    Parameters:
+    - f (Func): The function to plot.
+    - root (float): The root of `f`
+    """
+    a, b = interval
+    x = np.linspace(a, b, 50)
+    plt.plot(x, f(x), label="f(x) = {}".format(funcString(f)))   # type:ignore
+    
+    f_root = f(root)
+    plt.scatter(root, f_root, color='red', zorder=5, label="f({}) = {}".format(root, f_root))
+    
+    plt.legend()
     plt.show(block=False)
     plt.waitforbuttonpress()
     plt.close()

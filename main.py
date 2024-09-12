@@ -19,16 +19,18 @@ def main():
     roots = findRootBisection(f, interval)
 
     printSummary("1 (a)", f, interval, roots)
+    plotFunc(f, roots[-1], interval)
 
     ############################################
     # Question 1 (b)
     ###########################################
 
     f: Func = lambda x: x**2 - 4*x + log(x)
-    interval: Interval = (3, 4)
+    interval: Interval = (2, 4)
     roots = findRootBisection(f, interval)
 
     printSummary("1 (b)", f, interval, roots)
+    plotFunc(f, roots[-1], interval)
 
     ############################################
     # Question 2
@@ -39,6 +41,7 @@ def main():
     roots = findRootBisection(f, interval)
 
     printSummary("2", f, interval, roots)
+    plotFunc(f, roots[-1], interval)
 
     ############################################
     # Question 3 (a)
@@ -95,6 +98,7 @@ def main():
     ]
     roots = findRootFixedPointItertion(1.0, gxs, (1, 2))
     printSummary("3 (b)", f, interval, roots)
+    plotFunc(f, roots[-1], interval)
 
     ############################################
     # Question 4 (a)
@@ -116,6 +120,7 @@ def main():
 
     roots = findRootSecant(f, interval)
     printSummary("4 (b)", f, interval, roots)
+    plotFunc(f, roots[-1], interval)
 
     ############################################
     # Question 5
@@ -138,6 +143,8 @@ def main():
 
     roots = findRootSecant(f, interval)
     printSummary("5 (b) - Secant", f, interval, roots)
+
+    plotFunc(f, roots[-1], interval)
 
 
 if __name__ == "__main__":
